@@ -2,62 +2,93 @@
 
 *Your books. Your voice. Your people.*
 
-A high-fidelity interactive prototype of **Folio** — a social reading app built
-around voice notes, constellation-style discovery, and communities that feel
-like book clubs, not forums.
+**Folio** is a social reading app built around voice notes, constellation-style
+discovery, and communities that feel like book clubs, not forums. Calm by
+design: warm oatmeal, sage, clay terracotta, and dusty lavender — nothing
+flashes or shouts.
 
-## Run it
+This repo contains **two implementations** of the same design:
 
-No build step, no dependencies. Just open the file:
+| | What | Where | How to see it |
+|---|---|---|---|
+| 🌐 | Interactive web prototype | `index.html` | Open in any browser — zero setup |
+| 🤖 | Native Android app (Kotlin + Jetpack Compose) | `android/` | Open in Android Studio and press Run |
+
+---
+
+## 🌐 Web prototype — see it in 10 seconds
+
+No build step, no dependencies:
 
 ```
 open index.html        # macOS
 xdg-open index.html    # Linux
 ```
 
-Or serve it locally: `python3 -m http.server` and visit `http://localhost:8000`.
+Or serve it: `python3 -m http.server` → `http://localhost:8000`.
+Renders in a phone frame on desktop, full-screen on mobile. Use it as the
+living design reference.
 
-It renders inside a phone frame on desktop and goes full-screen on mobile.
+## 🤖 Android app — the real thing
 
-## What's inside
+Built with the recommended modern stack: **Kotlin, Jetpack Compose,
+Material 3, Navigation Compose**. No XML layouts.
 
-Every section of the Folio v1.0 spec is implemented:
+### Run it
 
-1. **Feed** — vertical card feed with covers, inline-tappable star ratings,
-   expandable reviews, emoji reactions, and playable voice-note pills.
-   Friends / Everyone scope toggle.
-2. **Search & book detail** — real-time search grid; detail pages with
-   collapsible synopsis, community rating breakdown, comment threads with
-   replies, and chapter-tagged voice notes.
-3. **Voice notes** — recording flow with animated waveform, live timer, and
-   Private / Friends / Public visibility.
-4. **Profile & shelves** — stats, favourite genres, and the three default
-   shelves as horizontal cover rails.
-5. **Neural book map** — full-bleed `#0d0d14` canvas at the bottom of every
-   book page. Breathing nodes with per-node phase offsets, a pulsing center
-   ring, particles drifting along edges, connection-type filter chips
-   (theme / style / reader overlap), drag-to-pan, pinch/scroll zoom, and a
-   slide-up card whose "View book" button lets you hop between maps forever.
-6. **Direct messages** — inbox with unread dots; threads mixing text, shared
-   book cards, and voice pills.
-7. **Communities** — feed / shared shelf / live chat tabs, plus a full
-   creation flow (name, description, open vs invite-only, seeded shelf).
-8. **Library folders** — preview mosaics, 3-column grids, edit mode with
-   remove, an "Add book" tile, and visibility cycling. Deleting a grouping
-   never deletes books.
-9. **Profile customization** — banner sheet with a curated bookish palette,
-   a real photo picker for custom banners, and reset-to-default.
-10. **Onboarding** — four warm, fully skippable screens: welcome, genre
-    chips, shelf seeding, and optional friend-finding.
+1. Open **Android Studio** (Ladybug or newer).
+2. **File → Open…** and select the `android/` folder.
+3. Let Gradle sync (first sync downloads dependencies).
+4. Pick an emulator or a connected device and press **▶ Run**.
 
-## Design notes
+Requirements: JDK 17+, Android SDK 35 (Android Studio installs both for you).
+Min SDK is 26 (Android 8.0).
 
-- **Calm by default.** Warm oatmeal, sage, clay terracotta, and dusty
-  lavender; soft shadows; nothing flashes or shouts.
-- **Serif for books, sans for UI** — Fraunces + Outfit, per the spec's
-  typography direction.
-- **First-class dark mode** — toggle in the top bar (◐), defaults to your
-  system preference, persisted in `localStorage`.
-- **Soft failures, inviting empty states** — "Your shelf is quiet. Let's
-  change that."
+### Project layout
+
+```
+android/app/src/main/java/com/folio/app/
+├── MainActivity.kt          # entry point, theme state (dark/light toggle)
+├── FolioApp.kt              # Scaffold + bottom nav + Navigation Compose graph
+├── data/Data.kt             # models + sample books, users, feed, chats…
+└── ui/
+    ├── theme/Theme.kt       # the calm palette, Material 3 color schemes, type
+    ├── components/          # BookCover, VoicePill, RatingStars, avatars…
+    ├── map/NeuralMap.kt     # the neural book map (Compose Canvas)
+    └── screens/             # Feed, Discover, Book detail, Record, Library,
+                             # Communities, Messages, Profile, Onboarding
+```
+
+### What's implemented (full Folio v1.0 spec)
+
+1. **Feed** — cover cards, tap-to-rate stars, expandable reviews, emoji
+   reactions, playable voice pills, Friends/Everyone toggle.
+2. **Search & book detail** — live search grid, collapsible synopsis,
+   rating breakdown bars, comments with replies, chapter-tagged voice notes.
+3. **Voice notes** — recording screen with animated waveform, live timer,
+   Private / Friends / Public visibility. (Playback/record are simulated —
+   wiring `MediaRecorder` is the natural next step.)
+4. **Profile & shelves** — stats, favourite genres, three shelf rails.
+5. **Neural book map** — deep `#0d0d14` Compose Canvas: breathing nodes with
+   per-node sine phase, pulsing center ring, particles along edges, filter
+   chips with smooth fades, drag-to-pan, pinch-to-zoom, and a slide-up card
+   whose "View book" hops to the next constellation, forever.
+6. **Direct messages** — inbox with unread dots; text, shared book cards,
+   and voice pills in threads.
+7. **Communities** — feed / shared shelf / live chat tabs + creation flow
+   (open vs invite-only).
+8. **Library folders** — preview mosaics, 3-column grid, edit mode with
+   remove (never deletes books), "Add book" tile, visibility cycling.
+9. **Profile customization** — curated bookish banner swatches **plus a real
+   photo picker** (`ActivityResultContracts.GetContent`), avatar with white
+   ring pinned bottom-left.
+10. **Onboarding** — four warm, fully skippable screens; no dark patterns.
+
+### Design notes
+
+- **Serif for book titles, sans-serif for UI** (system families; drop
+  Fraunces/Outfit into `res/font/` to match the web prototype exactly).
+- **First-class dark mode** — ◐ in the top bar, defaults to system.
+- Book covers are generated from each book's two palette colors — no image
+  assets required.
 - No ads, no dark patterns, no forced contacts access. Ever.
