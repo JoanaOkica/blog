@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Folio — Your books. Your voice. Your people.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   FOLIO — calm, warm, bookish.
+   Light: oatmeal + sage + clay + dusty lavender.
+   Dark:  soft ink, never pure black (except the neural map).
+   ============================================================ */
+:root{
+  --bg:#F6F2EA;            /* warm oatmeal */
+  --bg-soft:#EFE9DD;
+  --surface:#FDFBF6;
+  --surface-2:#F3EDE2;
+  --ink:#33302A;
+  --ink-soft:#6E675C;
+  --ink-faint:#A39A8C;
+  --line:#E5DDCE;
+  --sage:#7E9276;          /* primary */
+  --sage-deep:#5E7259;
+  --sage-soft:#E2E8DC;
+  --clay:#C8825F;          /* accent */
+  --clay-soft:#F2E0D3;
+  --lavender:#9A8FB8;
+  --lavender-soft:#E8E3F0;
+  --gold:#D9A441;
+  --shadow:0 10px 30px rgba(70,60,40,.10);
+  --shadow-sm:0 3px 12px rgba(70,60,40,.08);
+  --pill:#ECE5D6;
+  --map-bg:#0d0d14;
+  --r-lg:24px; --r-md:18px; --r-sm:12px;
+}
+[data-theme="dark"]{
+  --bg:#15141B;
+  --bg-soft:#1B1A22;
+  --surface:#1F1E27;
+  --surface-2:#262430;
+  --ink:#ECE7DD;
+  --ink-soft:#A8A199;
+  --ink-faint:#6F6A66;
+  --line:#2E2C38;
+  --sage:#94A98B;
+  --sage-deep:#AFC2A6;
+  --sage-soft:#262E24;
+  --clay:#D6976F;
+  --clay-soft:#33271F;
+  --lavender:#A99EC9;
+  --lavender-soft:#272334;
+  --gold:#D9A441;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --shadow-sm:0 3px 12px rgba(0,0,0,.3);
+  --pill:#2A2833;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Outfit',system-ui,sans-serif;
+  background:linear-gradient(140deg,#E9E2D2,#F6F2EA 45%,#E4E8DC);
+  color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;
+}
+body[data-theme="dark"]{background:linear-gradient(140deg,#100F15,#17161E 50%,#141820)}
+.serif{font-family:'Fraunces',Georgia,serif}
+
+/* ---------- phone frame ---------- */
+#phone{
+  width:402px;height:min(874px,98vh);
+  background:var(--bg);
+  border-radius:44px;
+  box-shadow:0 30px 80px rgba(50,42,28,.28),0 0 0 10px #2b2823,0 0 0 12px #444039;
+  overflow:hidden;position:relative;
+  display:flex;flex-direction:column;
+  transition:background .4s;
+}
+@media (max-width:480px){
+  body{align-items:stretch}
+  #phone{width:100%;height:100vh;height:100dvh;border-radius:0;box-shadow:none}
+}
+
+/* ---------- screens ---------- */
+.screen{position:absolute;inset:0;display:none;flex-direction:column;background:var(--bg);overflow:hidden;transition:background .4s}
+.screen.active{display:flex}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding-bottom:96px}
+.scroll::-webkit-scrollbar{display:none}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:12px;padding:54px 20px 12px;background:var(--bg);transition:background .4s}
+.topbar .brand{font-family:'Fraunces',serif;font-weight:600;font-size:26px;letter-spacing:.2px}
+.topbar .spacer{flex:1}
+.iconbtn{
+  width:40px;height:40px;border-radius:14px;border:none;cursor:pointer;
+  background:var(--surface-2);color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+  transition:transform .15s,background .3s;
+}
+.iconbtn:active{transform:scale(.92)}
+.backbtn{background:transparent;font-size:20px;width:36px}
+.avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-weight:600;font-size:14px;color:#fff;flex-shrink:0;cursor:pointer;border:none}
+.av-sm{width:30px;height:30px;font-size:11px}
+.av-lg{width:76px;height:76px;font-size:26px}
+
+/* ---------- bottom nav ---------- */
+#nav{
+  position:absolute;left:14px;right:14px;bottom:14px;z-index:40;
+  background:color-mix(in srgb,var(--surface) 88%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1px solid var(--line);
+  border-radius:26px;box-shadow:var(--shadow);
+  display:flex;justify-content:space-around;padding:8px 6px;
+}
+#nav button{
+  flex:1;border:none;background:none;cursor:pointer;color:var(--ink-faint);
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-family:'Outfit';font-size:10px;font-weight:500;padding:6px 0;border-radius:16px;
+  transition:color .25s;
+}
+#nav button .ni{font-size:19px;line-height:1;transition:transform .25s}
+#nav button.on{color:var(--sage-deep)}
+#nav button.on .ni{transform:translateY(-2px)}
+#nav button.on::after{content:'';width:4px;height:4px;border-radius:2px;background:var(--clay);margin-top:1px}
+
+/* ---------- feed ---------- */
+.card{
+  background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);
+  margin:0 16px 16px;padding:16px;border:1px solid var(--line);
+  transition:background .4s;
+}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-head .who{flex:1;min-width:0}
+.card-head .who b{font-weight:600;font-size:14px}
+.card-head .who span{display:block;font-size:11.5px;color:var(--ink-faint)}
+.card-body{display:flex;gap:14px}
+.cover{
+  border-radius:10px;flex-shrink:0;position:relative;overflow:hidden;cursor:pointer;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:9px 8px;color:rgba(255,255,255,.94);
+  box-shadow:0 6px 16px rgba(40,30,20,.22), inset 0 0 0 1px rgba(255,255,255,.14);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1);
+}
+.cover:active{transform:rotateY(14deg) scale(.97)}
+.cover .ct{font-family:'Fraunces',serif;font-weight:600;line-height:1.12}
+.cover .ca{font-size:.62em;opacity:.82;font-weight:400;letter-spacing:.3px}
+.cover::after{content:'';position:absolute;left:5px;top:0;bottom:0;width:1.5px;background:rgba(255,255,255,.25)}
+.cover.sel{outline:2.5px solid var(--sage);outline-offset:2px}
+.cv-feed{width:86px;height:126px;font-size:15px}
+.cv-grid{width:100%;aspect-ratio:2/3;font-size:14px}
+.cv-shelf{width:88px;height:130px;font-size:14px}
+.cv-tiny{width:42px;height:62px;font-size:8px;padding:5px 4px}
+.card-text{flex:1;min-width:0}
+.booktitle-sm{font-family:'Fraunces',serif;font-weight:600;font-size:16px;line-height:1.2;cursor:pointer}
+.bookauthor-sm{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.stars{display:inline-flex;gap:2px;margin:7px 0 6px;cursor:pointer}
+.stars span{font-size:15px;color:var(--line);transition:color .15s,transform .15s}
+.stars span.f{color:var(--gold)}
+.stars span:active{transform:scale(1.3)}
+.review{font-size:13.5px;color:var(--ink-soft);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.review.open{-webkit-line-clamp:unset}
+.reactrow{display:flex;align-items:center;gap:6px;margin-top:13px}
+.react{
+  border:none;background:var(--surface-2);border-radius:999px;padding:6px 11px;cursor:pointer;
+  font-size:12.5px;color:var(--ink-soft);font-family:'Outfit';font-weight:500;
+  display:flex;gap:5px;align-items:center;transition:transform .15s,background .25s;
+}
+.react:active{transform:scale(.9)}
+.react.hit{background:var(--sage-soft);color:var(--sage-deep)}
+
+/* ---------- voice pill ---------- */
+.vpill{
+  display:flex;align-items:center;gap:9px;margin-top:10px;cursor:pointer;
+  background:var(--lavender-soft);border:1px solid color-mix(in srgb,var(--lavender) 30%,transparent);
+  border-radius:999px;padding:7px 13px 7px 8px;max-width:280px;
+  transition:box-shadow .3s;
+}
+.vpill.playing{box-shadow:0 0 0 3px color-mix(in srgb,var(--lavender) 25%,transparent)}
+.wave{display:flex;align-items:center;gap:2.5px;height:22px;flex:1}
+.wave i{width:2.5px;border-radius:2px;background:var(--lavender);opacity:.85;display:block}
+.vpill.playing .wave i{animation:wv 0.9s ease-in-out infinite alternate}
+@keyframes wv{from{transform:scaleY(.45)}to{transform:scaleY(1.15)}}
+.vdur{font-size:11.5px;color:var(--lavender);font-weight:600;flex-shrink:0}
+.vchap{font-size:9.5px;font-weight:700;letter-spacing:.4px;background:var(--lavender);color:#fff;
+  border-radius:6px;padding:2px 6px;flex-shrink:0}
+.vplay{width:26px;height:26px;border-radius:50%;background:var(--lavender);color:#fff;border:none;
+  font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+
+/* ---------- section labels ---------- */
+.sect{font-size:11.5px;font-weight:700;letter-spacing:1.6px;color:var(--ink-faint);
+  text-transform:uppercase;margin:22px 20px 12px}
+.sect:first-child{margin-top:8px}
+
+/* ---------- search ---------- */
+.searchwrap{padding:6px 16px 14px}
+.searchbox{
+  display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--line);
+  border-radius:18px;padding:13px 16px;box-shadow:var(--shadow-sm);
+}
+.searchbox input{flex:1;border:none;outline:none;background:none;font-family:'Outfit';
+  font-size:15px;color:var(--ink)}
+.searchbox input::placeholder{color:var(--ink-faint)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:4px 16px}
+.gtitle{font-size:11px;color:var(--ink-soft);margin-top:6px;font-weight:500;line-height:1.25;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+/* ---------- book detail ---------- */
+.bd-hero{display:flex;gap:18px;padding:8px 20px 4px;align-items:flex-end}
+.bd-meta h1{font-family:'Fraunces',serif;font-size:23px;font-weight:600;line-height:1.15}
+.bd-meta .auth{color:var(--ink-soft);font-size:14px;margin-top:5px}
+.bd-meta .yr{color:var(--ink-faint);font-size:12px;margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:10.5px;font-weight:600;letter-spacing:.3px;padding:4px 10px;border-radius:999px;
+  background:var(--sage-soft);color:var(--sage-deep)}
+.syn{padding:14px 20px 0;font-size:14px;line-height:1.65;color:var(--ink-soft)}
+.syn p{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.syn.open p{-webkit-line-clamp:unset}
+.syn .more{color:var(--clay);font-weight:600;font-size:13px;cursor:pointer;margin-top:4px;display:inline-block}
+.ratingbox{display:flex;gap:20px;align-items:center;margin:18px 16px 0;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-md);padding:16px;box-shadow:var(--shadow-sm)}
+.bignum{font-family:'Fraunces',serif;font-size:42px;font-weight:600;line-height:1}
+.rbars{flex:1;display:flex;flex-direction:column;gap:4px}
+.rbar{display:flex;align-items:center;gap:7px;font-size:10.5px;color:var(--ink-faint)}
+.rbar .tr{flex:1;height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden}
+.rbar .fl{height:100%;border-radius:3px;background:var(--clay)}
+.comment{display:flex;gap:10px;padding:11px 20px}
+.comment .cbody{flex:1}
+.comment b{font-size:13px;font-weight:600}
+.comment p{font-size:13px;color:var(--ink-soft);line-height:1.5;margin-top:2px}
+.comment .cmeta{font-size:11px;color:var(--ink-faint);margin-top:5px;display:flex;gap:14px}
+.comment .cmeta span{cursor:pointer}
+.comment.reply{margin-left:38px;padding-top:0}
+
+/* ---------- neural map ---------- */
+#maphead{display:flex;align-items:center;justify-content:space-between;padding:26px 20px 12px}
+#maphead h2{font-family:'Fraunces',serif;font-size:19px;font-weight:600}
+#maphead small{color:var(--ink-faint);font-size:11px}
+.mapwrap{position:relative;background:var(--map-bg);min-height:70vh;height:600px;overflow:hidden;
+  border-radius:28px 28px 0 0}
+#neural{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:grab}
+.chips{position:absolute;top:14px;left:0;right:0;display:flex;gap:8px;padding:0 16px;z-index:5;
+  overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:rgba(255,255,255,.65);
+  backdrop-filter:blur(8px);border-radius:999px;padding:7px 15px;font-family:'Outfit';font-size:12px;
+  font-weight:500;cursor:pointer;white-space:nowrap;transition:all .3s}
+.chip.on{background:rgba(255,255,255,.92);color:#16151c;border-color:transparent;font-weight:600}
+.maphint{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:rgba(255,255,255,.32);
+  font-size:11px;letter-spacing:.4px;z-index:4;pointer-events:none}
+#nodecard{
+  position:absolute;left:12px;right:12px;bottom:-220px;z-index:6;
+  background:rgba(28,27,38,.92);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:18px;color:#EDEAF5;
+  transition:bottom .45s cubic-bezier(.32,1.2,.45,1);
+}
+#nodecard.show{bottom:14px}
+#nodecard h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600}
+#nodecard .na{font-size:12.5px;color:rgba(255,255,255,.55);margin-top:2px}
+#nodecard .ntags{display:flex;gap:6px;margin:10px 0}
+#nodecard .ntag{font-size:10px;font-weight:700;letter-spacing:.5px;padding:3.5px 9px;border-radius:999px}
+#nodecard .nreason{font-size:13px;line-height:1.5;color:rgba(255,255,255,.78)}
+#nodecard .nbtn{margin-top:14px;width:100%;border:none;border-radius:14px;padding:12px;cursor:pointer;
+  font-family:'Outfit';font-weight:600;font-size:14px;background:#EDE9DF;color:#16151c}
+#nodecard .nclose{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.1);border:none;
+  color:rgba(255,255,255,.7);width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:11px}
+
+/* ---------- profile ---------- */
+.banner{height:158px;position:relative;transition:background .4s;border-radius:0 0 30px 30px}
+.banner .avatar{position:absolute;left:20px;bottom:-30px;width:84px;height:84px;font-size:28px;
+  border:4px solid var(--bg);box-shadow:var(--shadow-sm)}
+.banner .editbtn{position:absolute;right:16px;bottom:14px;background:rgba(20,18,15,.4);
+  backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;
+  padding:7px 15px;font-family:'Outfit';font-size:12px;font-weight:500;cursor:pointer}
+.pname{margin:40px 20px 0;font-family:'Fraunces',serif;font-size:23px;font-weight:600}
+.pbio{margin:4px 20px 0;font-size:13.5px;color:var(--ink-soft);line-height:1.5}
+.statrow{display:flex;gap:10px;margin:16px 16px 0}
+.stat{flex:1;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:13px 8px;text-align:center;box-shadow:var(--shadow-sm)}
+.stat b{font-family:'Fraunces',serif;font-size:21px;font-weight:600;display:block}
+.stat span{font-size:10px;color:var(--ink-faint);font-weight:600;letter-spacing:.6px;text-transform:uppercase}
+.genrerow{display:flex;flex-wrap:wrap;gap:7px;padding:0 20px}
+.shelfrow{display:flex;gap:12px;overflow-x:auto;padding:2px 20px 10px;scrollbar-width:none}
+.shelfrow::-webkit-scrollbar{display:none}
+.followline{margin:14px 20px 0;font-size:13px;color:var(--ink-soft)}
+.followline b{color:var(--ink)}
+
+/* banner picker */
+.sheet{
+  position:absolute;left:0;right:0;bottom:0;z-index:60;transform:translateY(105%);
+  background:var(--surface);border-radius:28px 28px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.18);
+  padding:22px 20px 30px;transition:transform .4s cubic-bezier(.32,1.1,.45,1);
+}
+.sheet.show{transform:translateY(0)}
+.sheet h3{font-family:'Fraunces',serif;font-size:18px;font-weight:600;margin-bottom:4px}
+.sheet .sub{font-size:12.5px;color:var(--ink-faint);margin-bottom:16px}
+.swatches{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.swatch{width:44px;height:44px;border-radius:50%;cursor:pointer;border:none;position:relative;
+  transition:transform .2s}
+.swatch:active{transform:scale(.9)}
+.swatch.sel::after{content:'';position:absolute;inset:-5px;border:2.5px solid var(--clay);border-radius:50%}
+.swatch.photo{background:var(--surface-2);color:var(--ink-soft);font-size:17px;
+  display:flex;align-items:center;justify-content:center}
+.sheetbtn{margin-top:20px;width:100%;border:none;border-radius:16px;padding:14px;cursor:pointer;
+  font-family:'Outfit';font-weight:600;font-size:14.5px;background:var(--sage);color:#fff}
+.sheetbtn.ghost{background:none;color:var(--ink-faint);margin-top:6px;font-weight:500}
+#scrim{position:absolute;inset:0;background:rgba(20,16,10,.35);z-index:55;opacity:0;
+  pointer-events:none;transition:opacity .35s}
+#scrim.show{opacity:1;pointer-events:auto}
+
+/* ---------- library ---------- */
+.folder{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:12px 14px;margin:0 16px 12px;cursor:pointer;box-shadow:var(--shadow-sm)}
+.fmosaic{display:flex}
+.fmosaic .cv-tiny{margin-left:-22px;box-shadow:2px 4px 10px rgba(0,0,0,.18)}
+.fmosaic .cv-tiny:first-child{margin-left:0}
+.fmeta{flex:1}
+.fmeta b{font-size:15px;font-weight:600}
+.fmeta span{display:block;font-size:11.5px;color:var(--ink-faint);margin-top:2px}
+.fcount{font-size:11px;font-weight:700;background:var(--clay-soft);color:var(--clay);
+  border-radius:999px;padding:4px 9px}
+.newfolder{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 16px 12px;
+  border:1.5px dashed var(--line);border-radius:var(--r-md);padding:16px;color:var(--ink-faint);
+  font-size:13.5px;font-weight:500;cursor:pointer;background:none;width:calc(100% - 32px);font-family:'Outfit'}
+.addtile{border:1.5px dashed var(--line);border-radius:10px;aspect-ratio:2/3;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--ink-faint);
+  font-size:11px;cursor:pointer;background:none;font-family:'Outfit'}
+.addtile .plus{font-size:22px;line-height:1}
+.gridwrap{position:relative}
+.gridwrap .rm{position:absolute;top:-7px;right:-7px;width:24px;height:24px;border-radius:50%;
+  background:var(--clay);color:#fff;border:2px solid var(--bg);font-size:11px;cursor:pointer;
+  display:none;align-items:center;justify-content:center;z-index:3}
+.editmode .gridwrap .rm{display:flex}
+.editmode .gridwrap{animation:wig 0.4s ease-in-out infinite alternate}
+@keyframes wig{from{transform:rotate(-1deg)}to{transform:rotate(1deg)}}
+
+/* ---------- communities ---------- */
+.commcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  margin:0 16px 14px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow-sm)}
+.commbanner{height:84px;display:flex;align-items:flex-end;padding:12px 16px;
+  color:#fff;font-family:'Fraunces',serif;font-size:18px;font-weight:600;text-shadow:0 2px 8px rgba(0,0,0,.3)}
+.commbody{padding:12px 16px 14px}
+.commbody p{font-size:12.5px;color:var(--ink-soft);line-height:1.45}
+.commline{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11.5px;color:var(--ink-faint)}
+.privacy{font-size:9.5px;font-weight:700;letter-spacing:.5px;border-radius:6px;padding:3px 7px;
+  background:var(--lavender-soft);color:var(--lavender)}
+.tabrow{display:flex;gap:6px;padding:4px 16px 14px}
+.tabbtn{flex:1;border:none;border-radius:999px;padding:9px;font-family:'Outfit';font-size:12.5px;
+  font-weight:600;cursor:pointer;background:var(--surface-2);color:var(--ink-faint);transition:all .25s}
+.tabbtn.on{background:var(--ink);color:var(--bg)}
+
+/* ---------- messages ---------- */
+.convrow{display:flex;align-items:center;gap:13px;padding:13px 20px;cursor:pointer}
+.convrow:active{background:var(--surface-2)}
+.convrow .cv-body{flex:1;min-width:0}
+.convrow b{font-size:14.5px;font-weight:600}
+.convrow p{font-size:12.5px;color:var(--ink-faint);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;margin-top:2px}
+.convrow .when{font-size:10.5px;color:var(--ink-faint);align-self:flex-start;margin-top:4px}
+.unread{width:9px;height:9px;border-radius:50%;background:var(--clay);flex-shrink:0}
+.thread{flex:1;overflow-y:auto;padding:10px 16px 90px;display:flex;flex-direction:column;gap:10px;
+  scrollbar-width:none}
+.thread::-webkit-scrollbar{display:none}
+.msg{max-width:75%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.45}
+.msg.me{align-self:flex-end;background:var(--sage);color:#fff;border-bottom-right-radius:6px}
+.msg.them{align-self:flex-start;background:var(--surface);border:1px solid var(--line);
+  border-bottom-left-radius:6px}
+.msg .mt{display:block;font-size:9.5px;opacity:.6;margin-top:4px;text-align:right}
+.bookmsg{display:flex;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:10px;max-width:80%;cursor:pointer;box-shadow:var(--shadow-sm)}
+.bookmsg.me{align-self:flex-end}.bookmsg.them{align-self:flex-start}
+.bookmsg .bm{font-size:13px}
+.bookmsg .bm b{font-family:'Fraunces',serif;display:block}
+.bookmsg .bm span{font-size:11.5px;color:var(--ink-faint)}
+.composer{position:absolute;left:12px;right:12px;bottom:14px;display:flex;gap:8px;z-index:30}
+.composer input{flex:1;border:1px solid var(--line);background:var(--surface);border-radius:999px;
+  padding:13px 18px;font-family:'Outfit';font-size:14px;color:var(--ink);outline:none;
+  box-shadow:var(--shadow-sm)}
+.composer button{width:48px;height:48px;border-radius:50%;border:none;background:var(--sage);
+  color:#fff;font-size:16px;cursor:pointer;flex-shrink:0;box-shadow:var(--shadow-sm)}
+
+/* ---------- record screen ---------- */
+#scr-record{background:linear-gradient(170deg,var(--bg),var(--lavender-soft));align-items:center;
+  justify-content:center;text-align:center}
+#scr-record .rc-book{font-size:13px;color:var(--ink-faint);margin-top:8px}
+#recwave{display:flex;align-items:center;justify-content:center;gap:3.5px;height:110px;margin:44px 0 12px}
+#recwave i{width:4px;border-radius:3px;background:var(--lavender);animation:wv .8s ease-in-out infinite alternate}
+#rectime{font-family:'Fraunces',serif;font-size:38px;font-weight:500}
+.recstop{margin-top:38px;width:84px;height:84px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--clay);color:#fff;font-size:24px;box-shadow:0 10px 30px color-mix(in srgb,var(--clay) 45%,transparent);
+  animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.visrow{display:flex;gap:10px;margin-top:34px}
+.visbtn{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:10px 18px;
+  font-family:'Outfit';font-size:13px;font-weight:500;color:var(--ink-soft);cursor:pointer}
+.visbtn.on{border-color:var(--sage);background:var(--sage-soft);color:var(--sage-deep)}
+
+/* ---------- onboarding ---------- */
+#scr-onboard{background:linear-gradient(165deg,#F2EDE2,#E6EADF 55%,#EFE5DC);z-index:100}
+body[data-theme="dark"] #scr-onboard{background:linear-gradient(165deg,#17161E,#1A2019 55%,#211B18)}
+.ob-step{flex:1;display:none;flex-direction:column;padding:70px 28px 30px;overflow-y:auto;scrollbar-width:none}
+.ob-step.on{display:flex}
+.ob-art{width:150px;height:150px;border-radius:48px;margin:30px auto 34px;position:relative;
+  display:flex;align-items:center;justify-content:center;font-size:56px;
+  background:radial-gradient(circle at 30% 25%,var(--lavender-soft),var(--sage-soft));
+  box-shadow:var(--shadow)}
+.ob-art::after{content:'';position:absolute;inset:-12px;border-radius:56px;
+  border:1.5px dashed color-mix(in srgb,var(--sage) 40%,transparent)}
+.ob-step h1{font-family:'Fraunces',serif;font-size:30px;font-weight:600;line-height:1.15;text-align:center}
+.ob-step .lead{text-align:center;color:var(--ink-soft);font-size:15px;line-height:1.6;margin-top:12px}
+.ob-foot{margin-top:auto;padding-top:26px}
+.obtn{width:100%;border:none;border-radius:18px;padding:16px;font-family:'Outfit';font-weight:600;
+  font-size:15px;cursor:pointer;background:var(--sage);color:#fff;box-shadow:var(--shadow-sm)}
+.obtn.ghost{background:none;color:var(--ink-faint);box-shadow:none;font-weight:500;margin-top:4px}
+.obdots{display:flex;gap:6px;justify-content:center;margin-bottom:18px}
+.obdots i{width:7px;height:7px;border-radius:4px;background:var(--line);transition:all .3s}
+.obdots i.on{width:20px;background:var(--clay)}
+.genrechips{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin-top:26px}
+.gchip{border:1.5px solid var(--line);background:var(--surface);border-radius:999px;padding:10px 17px;
+  font-family:'Outfit';font-size:13.5px;font-weight:500;color:var(--ink-soft);cursor:pointer;
+  transition:all .2s}
+.gchip.on{border-color:var(--sage);background:var(--sage-soft);color:var(--sage-deep);font-weight:600}
+.seedgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+.seedbook{position:relative;cursor:pointer}
+.seedbook .tick{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;
+  background:var(--sage);color:#fff;font-size:11px;display:none;align-items:center;
+  justify-content:center;border:2.5px solid var(--bg);z-index:2}
+.seedbook.sel .tick{display:flex}
+.seedbook.sel .cover{outline:2.5px solid var(--sage);outline-offset:2px}
+.friendrow{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);
+  border-radius:16px;padding:11px 14px;margin-top:10px}
+.friendrow b{font-size:14px;flex:1}
+.fbtn{border:none;border-radius:999px;padding:7px 16px;font-family:'Outfit';font-size:12px;
+  font-weight:600;cursor:pointer;background:var(--sage-soft);color:var(--sage-deep)}
+.fbtn.added{background:var(--surface-2);color:var(--ink-faint)}
+
+/* ---------- empty state ---------- */
+.empty{text-align:center;padding:60px 40px;color:var(--ink-faint)}
+.empty .eart{font-size:46px;margin-bottom:14px;display:block;filter:saturate(.7)}
+.empty h3{font-family:'Fraunces',serif;color:var(--ink-soft);font-size:18px;font-weight:600}
+.empty p{font-size:13px;margin-top:6px;line-height:1.5}
+
+/* ---------- toast ---------- */
+#toast{position:absolute;left:50%;bottom:96px;transform:translate(-50%,20px);z-index:90;
+  background:var(--ink);color:var(--bg);border-radius:999px;padding:11px 20px;font-size:13px;
+  font-weight:500;opacity:0;pointer-events:none;transition:all .35s;white-space:nowrap;
+  box-shadow:var(--shadow)}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- modal ---------- */
+.modal{position:absolute;inset:0;z-index:70;display:none;align-items:flex-end;background:rgba(20,16,10,.4)}
+.modal.show{display:flex}
+.modalbox{background:var(--surface);width:100%;border-radius:28px 28px 0 0;padding:24px 20px 32px;
+  max-height:80%;overflow-y:auto;scrollbar-width:none}
+.modalbox h3{font-family:'Fraunces',serif;font-size:19px;font-weight:600;margin-bottom:16px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11.5px;font-weight:600;letter-spacing:.5px;color:var(--ink-faint);
+  text-transform:uppercase;margin-bottom:6px}
+.field input,.field textarea{width:100%;border:1.5px solid var(--line);background:var(--bg);
+  border-radius:14px;padding:12px 14px;font-family:'Outfit';font-size:14px;color:var(--ink);outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--sage)}
+.segrow{display:flex;gap:8px}
+.seg{flex:1;border:1.5px solid var(--line);background:var(--bg);border-radius:14px;padding:11px;
+  font-family:'Outfit';font-size:13px;font-weight:500;color:var(--ink-soft);cursor:pointer;text-align:center}
+.seg.on{border-color:var(--sage);background:var(--sage-soft);color:var(--sage-deep);font-weight:600}
+</style>
+</head>
+<body>
+<div id="phone">
+
+  <!-- ================= ONBOARDING ================= -->
+  <div class="screen active" id="scr-onboard">
+    <div class="ob-step on" data-step="0">
+      <div class="ob-art">📚</div>
+      <h1>Your books.<br>Your voice.<br>Your people.</h1>
+      <p class="lead">Folio is a quiet corner of the internet for the books you love — track them, talk about them, and wander to your next one.</p>
+      <div class="ob-foot">
+        <div class="obdots"><i class="on"></i><i></i><i></i><i></i></div>
+        <button class="obtn" onclick="obNext(1)">Get started</button>
+        <button class="obtn ghost" onclick="finishOnboarding()">Skip for now</button>
+      </div>
+    </div>
+    <div class="ob-step" data-step="1">
+      <h1 style="text-align:left;font-size:26px">What do you love to read?</h1>
+      <p class="lead" style="text-align:left">Pick a few — this gently shapes your discovery map. You can always change these later.</p>
+      <div class="genrechips" id="genrechips"></div>
+      <div class="ob-foot">
+        <div class="obdots"><i></i><i class="on"></i><i></i><i></i></div>
+        <button class="obtn" onclick="obNext(2)">Continue</button>
+        <button class="obtn ghost" onclick="obNext(2)">Skip</button>
+      </div>
+    </div>
+    <div class="ob-step" data-step="2">
+      <h1 style="text-align:left;font-size:26px">Add a few books you've read</h1>
+      <p class="lead" style="text-align:left">Three to five is plenty. They'll seed your shelf and light up your map.</p>
+      <div class="seedgrid" id="seedgrid"></div>
+      <div class="ob-foot">
+        <div class="obdots"><i></i><i></i><i class="on"></i><i></i></div>
+        <button class="obtn" onclick="obNext(3)">Continue</button>
+        <button class="obtn ghost" onclick="obNext(3)">Skip</button>
+      </div>
+    </div>
+    <div class="ob-step" data-step="3">
+      <h1 style="text-align:left;font-size:26px">Find your people</h1>
+      <p class="lead" style="text-align:left">Totally optional. Folio never reads your contacts without asking — and never asks twice.</p>
+      <div id="friendlist" style="margin-top:18px"></div>
+      <div class="ob-foot">
+        <div class="obdots"><i></i><i></i><i></i><i class="on"></i></div>
+        <button class="obtn" onclick="finishOnboarding()">Step inside</button>
+        <button class="obtn ghost" onclick="finishOnboarding()">Maybe later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FEED ================= -->
+  <div class="screen" id="scr-feed">
+    <div class="topbar">
+      <span class="brand">Folio</span>
+      <div class="spacer"></div>
+      <button class="iconbtn" id="themebtn" onclick="toggleTheme()" title="Theme">◐</button>
+      <button class="avatar" id="myavatar" onclick="go('scr-profile')" style="background:#7E9276">JO</button>
+    </div>
+    <div style="display:flex;gap:8px;padding:2px 20px 12px">
+      <button class="tabbtn on" id="feedFriends" onclick="setFeedScope('friends')" style="flex:0 0 auto;padding:8px 18px">Friends</button>
+      <button class="tabbtn" id="feedEveryone" onclick="setFeedScope('everyone')" style="flex:0 0 auto;padding:8px 18px">Everyone</button>
+    </div>
+    <div class="scroll" id="feedlist"></div>
+  </div>
+
+  <!-- ================= SEARCH ================= -->
+  <div class="screen" id="scr-search">
+    <div class="topbar"><span class="brand" style="font-size:22px">Discover</span></div>
+    <div class="searchwrap">
+      <div class="searchbox">
+        <span style="color:var(--ink-faint)">⌕</span>
+        <input id="searchinput" placeholder="Search titles, authors…" oninput="renderSearch(this.value)">
+      </div>
+    </div>
+    <div class="scroll"><div class="grid3" id="searchgrid"></div></div>
+  </div>
+
+  <!-- ================= BOOK DETAIL ================= -->
+  <div class="screen" id="scr-book">
+    <div class="topbar">
+      <button class="iconbtn backbtn" onclick="goBack()">←</button>
+      <div class="spacer"></div>
+      <button class="iconbtn" onclick="openRecord()" title="Record a voice note">🎙</button>
+      <button class="iconbtn" onclick="toast('Added to Want to read')">＋</button>
+    </div>
+    <div class="scroll" id="bookdetail" style="padding-bottom:0"></div>
+  </div>
+
+  <!-- ================= RECORD ================= -->
+  <div class="screen" id="scr-record">
+    <h2 class="serif" style="font-size:22px;font-weight:600">Recording voice note</h2>
+    <div class="rc-book" id="recbook">—</div>
+    <div id="recwave"></div>
+    <div id="rectime">0:00</div>
+    <div class="visrow">
+      <button class="visbtn" onclick="setVis(this,'Private')">🔒 Private</button>
+      <button class="visbtn on" onclick="setVis(this,'Friends')">👥 Friends</button>
+      <button class="visbtn" onclick="setVis(this,'Public')">🌍 Public</button>
+    </div>
+    <button class="recstop" onclick="stopRecord()">■</button>
+    <button class="obtn ghost" style="width:auto;margin-top:18px" onclick="cancelRecord()">Cancel</button>
+  </div>
+
+  <!-- ================= PROFILE ================= -->
+  <div class="screen" id="scr-profile">
+    <div class="scroll" id="profilebody" style="padding-bottom:96px"></div>
+  </div>
+
+  <!-- ================= LIBRARY ================= -->
+  <div class="screen" id="scr-library">
+    <div class="topbar"><span class="brand" style="font-size:22px">Library</span>
+      <div class="spacer"></div>
+    </div>
+    <div class="scroll" id="librarybody"></div>
+  </div>
+
+  <!-- ================= FOLDER ================= -->
+  <div class="screen" id="scr-folder">
+    <div class="topbar">
+      <button class="iconbtn backbtn" onclick="go('scr-library')">←</button>
+      <span class="brand serif" id="foldertitle" style="font-size:20px">Folder</span>
+      <div class="spacer"></div>
+      <button class="iconbtn" id="folderedit" onclick="toggleFolderEdit()">✎</button>
+      <button class="iconbtn" onclick="folderMenu()">⋯</button>
+    </div>
+    <div class="scroll"><div class="grid3" id="foldergrid"></div></div>
+  </div>
+
+  <!-- ================= COMMUNITIES ================= -->
+  <div class="screen" id="scr-comms">
+    <div class="topbar"><span class="brand" style="font-size:22px">Communities</span>
+      <div class="spacer"></div>
+      <button class="iconbtn" onclick="openModal('newcomm')">＋</button>
+    </div>
+    <div class="scroll" id="commlist"></div>
+  </div>
+
+  <!-- ================= COMMUNITY DETAIL ================= -->
+  <div class="screen" id="scr-comm">
+    <div class="topbar">
+      <button class="iconbtn backbtn" onclick="go('scr-comms')">←</button>
+      <span class="brand serif" id="commtitle" style="font-size:19px">—</span>
+      <div class="spacer"></div>
+    </div>
+    <div class="tabrow">
+      <button class="tabbtn on" onclick="commTab(this,'feed')">Feed</button>
+      <button class="tabbtn" onclick="commTab(this,'shelf')">Shelf</button>
+      <button class="tabbtn" onclick="commTab(this,'chat')">Chat</button>
+    </div>
+    <div class="scroll" id="commbody"></div>
+  </div>
+
+  <!-- ================= MESSAGES ================= -->
+  <div class="screen" id="scr-msgs">
+    <div class="topbar"><span class="brand" style="font-size:22px">Messages</span></div>
+    <div class="scroll" id="inbox"></div>
+  </div>
+
+  <!-- ================= CHAT THREAD ================= -->
+  <div class="screen" id="scr-chat">
+    <div class="topbar">
+      <button class="iconbtn backbtn" onclick="go('scr-msgs')">←</button>
+      <span id="chatavatar"></span>
+      <span class="brand" id="chatname" style="font-size:17px;font-family:'Outfit';font-weight:600">—</span>
+      <div class="spacer"></div>
+    </div>
+    <div class="thread" id="thread"></div>
+    <div class="composer">
+      <input id="chatinput" placeholder="Message…" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button onclick="sendMsg()">➤</button>
+    </div>
+  </div>
+
+  <!-- ================= NAV ================= -->
+  <div id="nav">
+    <button data-s="scr-feed" class="on" onclick="navTo('scr-feed',this)"><span class="ni">⌂</span>Home</button>
+    <button data-s="scr-search" onclick="navTo('scr-search',this)"><span class="ni">⌕</span>Discover</button>
+    <button data-s="scr-library" onclick="navTo('scr-library',this)"><span class="ni">▤</span>Library</button>
+    <button data-s="scr-comms" onclick="navTo('scr-comms',this)"><span class="ni">◉</span>Clubs</button>
+    <button data-s="scr-msgs" onclick="navTo('scr-msgs',this)"><span class="ni">✉</span>Chats</button>
+  </div>
+
+  <!-- banner picker sheet -->
+  <div id="scrim" onclick="closeSheets()"></div>
+  <div class="sheet" id="bannersheet">
+    <h3>Make it yours</h3>
+    <div class="sub">Pick a banner color, or use a photo from your camera roll.</div>
+    <div class="swatches" id="swatches"></div>
+    <button class="sheetbtn" onclick="closeSheets();toast('Banner updated ✨')">Done</button>
+    <button class="sheetbtn ghost" onclick="resetBanner()">Reset to default</button>
+    <input type="file" id="bannerfile" accept="image/*" style="display:none" onchange="bannerPhoto(this)">
+  </div>
+
+  <!-- new community modal -->
+  <div class="modal" id="newcomm" onclick="if(event.target===this)closeModal('newcomm')">
+    <div class="modalbox">
+      <h3>Start a community</h3>
+      <div class="field"><label>Name</label><input id="nc-name" placeholder="e.g. Slow Sunday Readers"></div>
+      <div class="field"><label>Description</label><input id="nc-desc" placeholder="What's it about?"></div>
+      <div class="field"><label>Privacy</label>
+        <div class="segrow">
+          <button class="seg on" onclick="segSel(this)">🌿 Open</button>
+          <button class="seg" onclick="segSel(this)">✉ Invite-only</button>
+        </div>
+      </div>
+      <div class="field"><label>Seed the shelf (optional, up to 5)</label>
+        <div class="shelfrow" id="nc-seed" style="padding:2px 0 4px"></div>
+      </div>
+      <button class="sheetbtn" onclick="createCommunity()">Create community</button>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+/* ============================================================ DATA */
+const BOOKS = [
+ {id:0, t:"The Lantern Tide", a:"Mara Ellison", y:2021, g:["Literary","Coastal"], c:["#3E5C66","#7FA8A4"],
+  syn:"On a fading island off the Atlantic coast, a lighthouse keeper's daughter inherits a logbook that seems to record storms before they happen. As the village prepares for one last winter, she must decide whether knowing the future is a gift or a quiet kind of grief. A slow, luminous novel about tides, memory, and the people who stay."},
+ {id:1, t:"Salt & Cedar", a:"June Okafor", y:2019, g:["Romance","Slow burn"], c:["#9C6B4F","#D9A47E"],
+  syn:"A carpenter restoring a derelict seaside chapel and the botanist cataloguing the dune behind it keep borrowing each other's tools, then each other's evenings. A warm, unhurried romance about building things that last — told over four seasons and one stubborn rose garden."},
+ {id:2, t:"The Glass Orchard", a:"T. R. Vance", y:2023, g:["Mystery","Gothic"], c:["#4E4668","#8B80A8"],
+  syn:"When archivist Nell Prior returns to her family's greenhouse estate, she finds every pane etched with initials that match a fifty-year-old missing persons list. The deeper she digs into the orchard's records, the more the house seems to be keeping its own. Atmospheric, precise, and quietly chilling."},
+ {id:3, t:"Smallwood", a:"Petra Lindqvist", y:2018, g:["Literary","Family"], c:["#5C6B4E","#9BAD86"],
+  syn:"Three generations of the Hale family run the last general store in a logging town that the highway forgot. Told in interleaving voices across sixty years, Smallwood is a tender study of inheritance — of debts, recipes, grudges, and the forest that outlasts them all."},
+ {id:4, t:"A Theory of Birds", a:"Anil Deshpande", y:2022, g:["Sci-fi","Speculative"], c:["#2F4858","#6E9AAF"],
+  syn:"In a near-future where migratory birds have begun flying new, impossible routes, ornithologist Ira Menon discovers the patterns spell coordinates. What waits at the convergence point will change how humanity understands navigation, language, and grief. Cerebral and unexpectedly moving."},
+ {id:5, t:"Night Swimming", a:"Carmen Reyes", y:2020, g:["Literary","Coming of age"], c:["#1F3A5F","#5C7FA8"],
+  syn:"Over one humid August, four teenagers sneak into the municipal pool after closing and tell each other everything except the truth. Twenty years later, one of them writes it all down. A novel about the versions of ourselves we leave in the water."},
+ {id:6, t:"The Cartographer's Daughter", a:"H. G. Bellamy", y:2017, g:["Historical","Adventure"], c:["#7A5C3E","#C2A878"],
+  syn:"Lisbon, 1755. After the earthquake destroys her father's map archive, Inês Almeida sets out to redraw the city from memory — and uncovers the route to a colony that every official chart was paid to forget. Sweeping, meticulous historical fiction."},
+ {id:7, t:"Driftless", a:"Noah Tran", y:2024, g:["Literary","Nature"], c:["#566246","#A4B494"],
+  syn:"A burnt-out cartographer takes a season-long job surveying the unglaciated hills of Wisconsin and finds a landscape that refuses straight lines. Part fieldwork journal, part love letter to slowness, Driftless is the rare novel that lowers your heart rate."},
+ {id:8, t:"The Quiet Hours", a:"Imogen Hale", y:2021, g:["Mystery","Cozy"], c:["#6B5B73","#A893B0"],
+  syn:"Night librarian Edie Foss has catalogued every sound the old library makes — which is how she knows the footsteps on the third floor don't belong. A gentle locked-room mystery steeped in tea, marginalia, and the politics of a very small town."},
+ {id:9, t:"Honey & Rust", a:"S. K. Adeyemi", y:2023, g:["Family","Saga"], c:["#8C5A2E","#D9A441"],
+  syn:"When the Adekunle family's beekeeping estate is split between two heirs — one who stayed, one who left — the bees themselves seem to take sides. A rich, humming saga about sweetness, corrosion, and what we owe the places that made us."},
+ {id:10,t:"Borrowed Light", a:"Felix Marsh", y:2016, g:["Sci-fi","Quiet"], c:["#2E3A4E","#7E8FA8"],
+  syn:"The last lamplighter on a generation ship walks the same three kilometres of corridor every night-cycle, keeping the old filament lamps alive for a crew that no longer notices them. Then one lamp starts flickering in Morse. Small, perfect, and devastating."},
+ {id:11,t:"The Understory", a:"Lena Brandt", y:2022, g:["Nature","Essays"], c:["#3D5240","#7E9276"],
+  syn:"Twelve essays written from the floor of twelve forests, on fungal networks, deadwood, patience, and the slow conversations trees hold underground. Brandt writes like moss grows — quietly, and then all at once you're covered."},
+];
+const USERS = {
+  me:   {n:"Joana", i:"JO", col:"#7E9276"},
+  maya: {n:"Maya Chen", i:"MC", col:"#C8825F"},
+  theo: {n:"Theo Park", i:"TP", col:"#9A8FB8"},
+  priya:{n:"Priya Nair", i:"PN", col:"#5C7FA8"},
+  sam:  {n:"Sam Whitfield", i:"SW", col:"#8C5A2E"},
+  noor: {n:"Noor Haddad", i:"NH", col:"#566246"},
+};
+let FEED = [
+ {u:"maya", b:7, r:5, ago:"2h", scope:"friends",
+  txt:"Finished this on the porch over two slow mornings and I genuinely feel recalibrated. Tran writes hills the way other people write love interests. The chapter on contour lines undid me a little.",
+  voice:{dur:"0:47"}, reacts:{"🤍":12,"🌿":5}, comments:3},
+ {u:"theo", b:2, r:4, ago:"5h", scope:"friends",
+  txt:"Did NOT see the greenhouse reveal coming. Vance plays completely fair with the clues too — I went back and they were all there, hiding in the pruning records.",
+  voice:null, reacts:{"🤍":8,"😮":7}, comments:5},
+ {u:"priya", b:10, r:5, ago:"8h", scope:"friends",
+  txt:"A 180-page book that I will be thinking about for 180 years. The flickering lamp chapter is the best thing I've read all year.",
+  voice:{dur:"1:12", chap:"Ch. 9"}, reacts:{"🤍":21,"✨":9}, comments:8},
+ {u:"sam", b:9, r:4, ago:"1d", scope:"everyone",
+  txt:"Reading this while eating toast with honey felt like a 4D experience. The sibling chapters alternate perspectives and it works so well.",
+  voice:null, reacts:{"🤍":6,"🍯":4}, comments:2},
+ {u:"noor", b:0, r:5, ago:"1d", scope:"friends",
+  txt:"The logbook entries between chapters are little prose poems. Read the last one out loud to an empty kitchen, no regrets.",
+  voice:{dur:"0:33"}, reacts:{"🤍":14}, comments:4},
+ {u:"maya", b:4, r:4, ago:"2d", scope:"everyone",
+  txt:"Bird people, drop everything. The middle section drags a touch but the ending pays off every single page of patience.",
+  voice:null, reacts:{"🤍":9,"🐦":11}, comments:6},
+];
+/* neural connections: per book → [target, strength(0–1), type, reason] */
+const CTYPES = {
+  theme:  {label:"THEME",  col:"#A99EC9"},
+  style:  {label:"STYLE",  col:"#94C2A0"},
+  readers:{label:"READERS",col:"#E0A877"},
+};
+const CONNS = {};
+const REASONS = {
+  theme:[ "Both circle the question of what we owe the places that made us.",
+          "Shared preoccupation with memory held inside landscapes.",
+          "Each treats solitude as a setting, not a problem to be fixed."],
+  style:["Same unhurried, close-third prose that rewards slow reading.",
+         "Both build chapters like rooms — small, complete, lamplit.",
+         "Spare sentences, long silences, devastating final lines."],
+  readers:["68% of readers who loved one rated the other 5 stars.",
+           "Frequently shelved together by readers in quiet-fiction circles.",
+           "Readers who voice-note one almost always voice-note the other."],
+};
+(function buildConns(){
+  for(const b of BOOKS){
+    const out=[]; const types=["theme","style","readers"];
+    for(let k=1;k<=7;k++){
+      const t=(b.id*7+k*5)%BOOKS.length;
+      if(t===b.id) continue;
+      const ty=types[(b.id+k)%3];
+      out.push({to:t, s:0.35+((b.id*13+k*29)%60)/100, type:ty,
+        reason:REASONS[ty][(b.id+k)%3]});
+    }
+    CONNS[b.id]=out.slice(0,6);
+  }
+})();
+let FOLDERS=[
+ {n:"Beach reads", books:[1,5,9], vis:"Public"},
+ {n:"Quiet sci-fi", books:[4,10], vis:"Friends only"},
+ {n:"To gift", books:[7,11,8,3], vis:"Private"},
+];
+let SHELVES={current:[7,2], read:[0,5,10,11,9], want:[4,6,8,1,3]};
+let COMMS=[
+ {n:"Slow Fiction Society", d:"For books that take their time. We read one quiet novel a month and nobody is ever behind.", col:["#566246","#A4B494"], members:284, priv:"OPEN", shelf:[7,3,11,0]},
+ {n:"Gothic Greenhouse", d:"Mysteries with atmosphere. Currently halfway through The Glass Orchard — spoilers walled until Sunday.", col:["#4E4668","#8B80A8"], members:97, priv:"INVITE-ONLY", shelf:[2,8]},
+ {n:"Night Shift Readers", d:"For everyone who reads when the house finally goes quiet. Voice notes encouraged, volume low.", col:["#2E3A4E","#7E8FA8"], members:151, priv:"OPEN", shelf:[10,5,4]},
+];
+let CHATS=[
+ {u:"maya", unread:true, when:"2:14 pm", msgs:[
+   {who:"them", t:"ok I need you to read Driftless immediately", at:"1:58 pm"},
+   {who:"them", type:"book", b:7, at:"1:58 pm"},
+   {who:"me", t:"adding it right now, your porch review sold me", at:"2:03 pm"},
+   {who:"them", type:"voice", dur:"0:21", at:"2:14 pm"},
+ ]},
+ {u:"theo", unread:false, when:"11:40 am", msgs:[
+   {who:"me", t:"no spoilers but how far are you in Glass Orchard", at:"11:02 am"},
+   {who:"them", t:"the pruning records chapter 👀", at:"11:38 am"},
+   {who:"them", t:"say NOTHING", at:"11:40 am"},
+ ]},
+ {u:"priya", unread:true, when:"yesterday", msgs:[
+   {who:"them", t:"borrowed light book club when??", at:"9:12 pm"},
+   {who:"them", type:"voice", dur:"1:02", at:"9:13 pm"},
+ ]},
+];
+const GENRES=["Literary fiction","Cozy mystery","Slow sci-fi","Romance","Nature writing","Historical","Essays","Gothic","Family sagas","Poetry"];
+const SWATCHCOLORS=["#4E4668","#3D5240","#9C6B4F","#2E3A4E","#3A3733","#6B5B73","#566246"];
+
+/* ============================================================ STATE */
+let currentBook=0, currentFolder=0, currentComm=0, currentChat=0, feedScope="friends";
+let mapAnim=null, lastScreen="scr-feed", folderEditMode=false;
+let bannerStyle="linear-gradient(120deg,#4E4668,#7E9276)";
+
+/* ============================================================ CORE NAV */
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const navIds=["scr-feed","scr-search","scr-library","scr-comms","scr-msgs"];
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.s===id));
+  document.getElementById('nav').style.display =
+    (id==="scr-onboard"||id==="scr-record"||id==="scr-chat")?"none":"flex";
+  if(id!=="scr-book" && mapAnim){cancelAnimationFrame(mapAnim);mapAnim=null}
+}
+function navTo(id,btn){ lastScreen=id; go(id); }
+function goBack(){ go(lastScreen||"scr-feed"); }
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function toggleTheme(){
+  const b=document.body;
+  const next=b.dataset.theme==="dark"?"light":"dark";
+  b.dataset.theme=next; document.getElementById('phone').dataset.theme=next;
+  document.querySelectorAll('.screen,#phone').forEach(()=>{});
+  localStorage.setItem('folio-theme',next);
+  applyTheme(next);
+}
+function applyTheme(t){
+  document.body.dataset.theme=t;
+  document.documentElement.dataset.theme=t;
+  document.getElementById('phone').setAttribute('data-theme',t);
+  /* set the variable scope: put data-theme on body so CSS vars cascade */
+}
+(function initTheme(){
+  const saved=localStorage.getItem('folio-theme');
+  const sys=window.matchMedia('(prefers-color-scheme: dark)').matches?"dark":"light";
+  applyTheme(saved||sys);
+})();
+
+/* ============================================================ HELPERS */
+function coverEl(b,cls,onclick){
+  return `<div class="cover ${cls}" style="background:linear-gradient(155deg,${b.c[0]},${b.c[1]})"
+    onclick="${onclick||`showBook(${b.id})`}">
+    <span class="ct">${b.t}</span><span class="ca">${b.a}</span></div>`;
+}
+function avEl(u,cls){ const x=USERS[u];
+  return `<span class="avatar ${cls||''}" style="background:${x.col}">${x.i}</span>`; }
+function starEl(r,inline){
+  let s='<span class="stars" '+(inline?`onclick="rateInline(event,this)"`:'')+'>';
+  for(let i=1;i<=5;i++) s+=`<span class="${i<=r?'f':''}" data-v="${i}">★</span>`;
+  return s+'</span>';
+}
+function rateInline(ev,el){
+  const v=ev.target.dataset.v; if(!v)return;
+  [...el.children].forEach((c,i)=>c.classList.toggle('f',i<v));
+  toast(`Rated ${v} star${v>1?'s':''} ✦`);
+}
+function waveEl(n){
+  let h='';
+  for(let i=0;i<(n||24);i++){
+    const v=6+Math.abs(Math.sin(i*1.7))*14;
+    h+=`<i style="height:${v.toFixed(0)}px;animation-delay:${(i*0.06).toFixed(2)}s"></i>`;
+  } return h;
+}
+function vpillEl(v,small){
+  if(!v) return '';
+  return `<div class="vpill" onclick="togglePill(this)">
+    <button class="vplay">▶</button>
+    ${v.chap?`<span class="vchap">${v.chap}</span>`:''}
+    <span class="wave">${waveEl(small?16:22)}</span>
+    <span class="vdur">${v.dur}</span></div>`;
+}
+function togglePill(p){
+  const playing=p.classList.toggle('playing');
+  p.querySelector('.vplay').textContent=playing?'❚❚':'▶';
+}
+
+/* ============================================================ FEED */
+function setFeedScope(s){
+  feedScope=s;
+  document.getElementById('feedFriends').classList.toggle('on',s==='friends');
+  document.getElementById('feedEveryone').classList.toggle('on',s==='everyone');
+  renderFeed();
+}
+function renderFeed(){
+  const el=document.getElementById('feedlist');
+  const items=FEED.filter(f=>feedScope==='everyone'||f.scope==='friends');
+  if(!items.length){
+    el.innerHTML=`<div class="empty"><span class="eart">🪴</span><h3>Your shelf is quiet.</h3><p>Let's change that — follow a few readers or add your first book.</p></div>`;
+    return;
+  }
+  el.innerHTML=items.map((f,idx)=>{
+    const b=BOOKS[f.b],u=USERS[f.u];
+    const reacts=Object.entries(f.reacts).map(([e,n])=>
+      `<button class="react" onclick="hitReact(this)">${e} <b>${n}</b></button>`).join('');
+    return `<div class="card">
+      <div class="card-head">${avEl(f.u)}
+        <div class="who"><b>${u.n}</b><span>finished a book · ${f.ago} ago</span></div>
+        <button class="iconbtn" style="width:32px;height:32px;font-size:14px" onclick="toast('Shared to DM 📬')">↗</button>
+      </div>
+      <div class="card-body">
+        ${coverEl(b,'cv-feed')}
+        <div class="card-text">
+          <div class="booktitle-sm" onclick="showBook(${b.id})">${b.t}</div>
+          <div class="bookauthor-sm">${b.a}</div>
+          ${starEl(f.r,true)}
+          <p class="review" onclick="this.classList.toggle('open')">${f.txt}</p>
+        </div>
+      </div>
+      ${f.voice?vpillEl(f.voice):''}
+      <div class="reactrow">${reacts}
+        <button class="react" onclick="toast('Comments coming right up 💬')">💬 ${f.comments}</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function hitReact(btn){
+  const hit=btn.classList.toggle('hit');
+  const b=btn.querySelector('b'); b.textContent=+b.textContent+(hit?1:-1);
+}
+
+/* ============================================================ SEARCH */
+function renderSearch(q){
+  q=(q||'').toLowerCase();
+  const el=document.getElementById('searchgrid');
+  const res=BOOKS.filter(b=>!q||b.t.toLowerCase().includes(q)||b.a.toLowerCase().includes(q));
+  if(!res.length){
+    el.innerHTML=`<div class="empty" style="grid-column:1/-1"><span class="eart">🔍</span><h3>Nothing yet.</h3><p>Try an author, or wander the map from any book you love.</p></div>`;
+    return;
+  }
+  el.innerHTML=res.map(b=>`<div>${coverEl(b,'cv-grid')}<div class="gtitle">${b.t}</div></div>`).join('');
+}
+
+/* ============================================================ BOOK DETAIL */
+function showBook(id){
+  currentBook=id;
+  const b=BOOKS[id];
+  const avg=(3.7+(id%14)/10).toFixed(1);
+  const dist=[64,22,9,3,2].map((v,i)=>({s:5-i,v:Math.max(2,(v+id*3)%70)}));
+  const voices=[
+    {u:"priya", dur:"1:12", chap:"Ch. "+(2+id%7)},
+    {u:"noor",  dur:"0:33", chap:null},
+    {u:"sam",   dur:"0:51", chap:"Ch. "+(1+id%4)},
+  ];
+  document.getElementById('bookdetail').innerHTML=`
+    <div class="bd-hero">${coverEl(b,'cv-shelf','')}
+      <div class="bd-meta"><h1 class="serif">${b.t}</h1>
+        <div class="auth">${b.a}</div><div class="yr">${b.y}</div>
+        <div class="tags">${b.g.map(g=>`<span class="tag">${g}</span>`).join('')}</div>
+      </div></div>
+    <div class="syn" id="syn"><p>${b.syn}</p>
+      <span class="more" onclick="document.getElementById('syn').classList.toggle('open');this.textContent=this.textContent==='Read more'?'Read less':'Read more'">Read more</span></div>
+    <div class="ratingbox">
+      <div style="text-align:center"><div class="bignum serif">${avg}</div>
+        <div style="margin-top:4px">${starEl(Math.round(avg))}</div>
+        <div style="font-size:10.5px;color:var(--ink-faint);margin-top:3px">${214+id*37} ratings</div></div>
+      <div class="rbars">${dist.map(d=>`<div class="rbar"><span>${d.s}★</span>
+        <span class="tr"><span class="fl" style="width:${d.v}%"></span></span></div>`).join('')}</div>
+    </div>
+    <div class="sect">Voice notes</div>
+    ${voices.map(v=>`<div style="display:flex;gap:10px;align-items:center;padding:4px 20px">
+       ${avEl(v.u,'av-sm')}${vpillEl({dur:v.dur,chap:v.chap},true)}</div>`).join('')}
+    <div style="padding:10px 20px">
+      <button class="visbtn" style="width:100%" onclick="openRecord()">🎙 &nbsp;Add your voice note</button></div>
+    <div class="sect">Conversation</div>
+    <div class="comment">${avEl('maya','av-sm')}
+      <div class="cbody"><b>Maya Chen</b><p>The last forty pages of this rearranged my furniture. Anyone else read it in one sitting?</p>
+      <div class="cmeta"><span>2h</span><span onclick="toast('Reply box opened 💬')">Reply</span><span>🤍 8</span></div></div></div>
+    <div class="comment reply">${avEl('theo','av-sm')}
+      <div class="cbody"><b>Theo Park</b><p>One sitting, one pot of tea, zero emotional preparation.</p>
+      <div class="cmeta"><span>1h</span><span onclick="toast('Reply box opened 💬')">Reply</span><span>🤍 3</span></div></div></div>
+    <div id="maphead"><h2>Connected books</h2><small>${CONNS[id].length} connections</small></div>
+    <div class="mapwrap">
+      <div class="chips" id="mapchips">
+        <button class="chip on" onclick="mapFilter(this,'all')">All</button>
+        <button class="chip" onclick="mapFilter(this,'theme')">Theme</button>
+        <button class="chip" onclick="mapFilter(this,'style')">Writing style</button>
+        <button class="chip" onclick="mapFilter(this,'readers')">Reader overlap</button>
+      </div>
+      <canvas id="neural"></canvas>
+      <div class="maphint">drag to wander · pinch to zoom · tap a star</div>
+      <div id="nodecard">
+        <button class="nclose" onclick="hideNodeCard()">✕</button>
+        <h3 id="nc-title"></h3><div class="na" id="nc-auth"></div>
+        <div class="ntags" id="nc-tags"></div>
+        <p class="nreason" id="nc-reason"></p>
+        <button class="nbtn" id="nc-view">View book →</button>
+      </div>
+    </div>`;
+  go('scr-book');
+  document.querySelector('#scr-book .scroll').scrollTop=0;
+  requestAnimationFrame(()=>initMap(id));
+}
+
+/* ============================================================ NEURAL MAP */
+function initMap(bookId){
+  const cv=document.getElementById('neural'); if(!cv) return;
+  if(mapAnim){cancelAnimationFrame(mapAnim);mapAnim=null}
+  const dpr=window.devicePixelRatio||1;
+  const W=cv.clientWidth,H=cv.clientHeight;
+  cv.width=W*dpr; cv.height=H*dpr;
+  const ctx=cv.getContext('2d'); ctx.scale(dpr,dpr);
+  const center=BOOKS[bookId];
+  const conns=CONNS[bookId];
+  const t0=performance.now();
+  let filter='all', cam={x:0,y:0,z:1}, drag=null, pinch=null, selected=-1;
+
+  const nodes=[{b:center,x:W/2,y:H/2-20,r:30,phase:0,alpha:1,isC:true,intro:0}];
+  conns.forEach((c,i)=>{
+    const ang=(-90+i*(360/conns.length)+(bookId*23)%40)*Math.PI/180;
+    const rad=105+(i%2)*62+((bookId+i)%3)*18;
+    nodes.push({b:BOOKS[c.to],x:W/2+Math.cos(ang)*rad,y:H/2-20+Math.sin(ang)*rad,
+      r:13+c.s*15,phase:i*1.13+bookId,alpha:1,conn:c,intro:0,introDelay:200+i*130});
+  });
+  /* a few node-to-node edges for constellation feel */
+  const xEdges=[];
+  for(let i=1;i<nodes.length-1;i+=2) xEdges.push([i,i+1]);
+
+  let particles=[];
+  function spawnParticle(){
+    const ni=1+Math.floor(Math.random()*(nodes.length-1));
+    particles.push({from:0,to:ni,t:0,sp:0.0035+Math.random()*0.004,
+      col:nodes[ni].b.c[1]});
+  }
+  function nodeColor(n){return n.b.c[1]}
+  function visible(n){return n.isC||filter==='all'||n.conn.type===filter}
+
+  function draw(now){
+    const t=(now-t0)/1000;
+    ctx.clearRect(0,0,W,H);
+    /* faint starfield */
+    ctx.save();
+    for(let i=0;i<46;i++){
+      const sx=((i*97.3)%W),sy=((i*61.7)%H);
+      ctx.globalAlpha=0.12+0.1*Math.sin(t*0.7+i);
+      ctx.fillStyle='#cfd2ff'; ctx.fillRect(sx,sy,1.1,1.1);
+    }
+    ctx.restore();
+    ctx.save();
+    ctx.translate(W/2+cam.x,H/2+cam.y); ctx.scale(cam.z,cam.z); ctx.translate(-W/2,-H/2);
+
+    /* intro progress + filter alpha lerp */
+    nodes.forEach(n=>{
+      const since=now-t0-(n.introDelay||0);
+      n.intro=Math.min(1,Math.max(0,since/600));
+      const target=visible(n)?1:0.12;
+      n.alpha+= (target-n.alpha)*0.08;
+    });
+
+    /* edges */
+    function edge(a,bn,strong){
+      const ea=Math.min(a.intro,bn.intro)*Math.min(a.alpha,bn.alpha);
+      if(ea<=0.01)return;
+      ctx.strokeStyle=strong?nodeColor(bn):'rgba(180,180,220,1)';
+      ctx.globalAlpha=ea*(strong?0.65:0.13);
+      ctx.lineWidth=strong?1.8:0.7;
+      ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(bn.x,bn.y);ctx.stroke();
+    }
+    nodes.slice(1).forEach((n,i)=>edge(nodes[0],n,selected===i+1));
+    xEdges.forEach(([a,b])=>edge(nodes[a],nodes[b],false));
+
+    /* particles */
+    particles.forEach(p=>{
+      p.t+=p.sp;
+      const a=nodes[p.from],b2=nodes[p.to];
+      if(b2.alpha<0.5)return;
+      const x=a.x+(b2.x-a.x)*p.t, y=a.y+(b2.y-a.y)*p.t;
+      ctx.globalAlpha=Math.sin(p.t*Math.PI)*0.9*b2.alpha;
+      ctx.fillStyle=p.col;
+      ctx.beginPath();ctx.arc(x,y,1.6,0,7);ctx.fill();
+      ctx.globalAlpha*=0.3;
+      ctx.beginPath();ctx.arc(x,y,3.6,0,7);ctx.fill();
+    });
+    particles=particles.filter(p=>p.t<1);
+    if(Math.random()<0.07)spawnParticle();
+
+    /* nodes */
+    nodes.forEach((n,i)=>{
+      if(n.intro<=0)return;
+      const breathe=1+0.06*Math.sin(t*1.4+n.phase);
+      const r=n.r*breathe*(0.4+0.6*easeOut(n.intro));
+      ctx.globalAlpha=n.alpha*n.intro;
+      /* glow */
+      const g=ctx.createRadialGradient(n.x,n.y,r*0.3,n.x,n.y,r*2.4);
+      g.addColorStop(0,nodeColor(n)+'66');g.addColorStop(1,'transparent');
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(n.x,n.y,r*2.4,0,7);ctx.fill();
+      /* pulsing ring on center / selected */
+      if(n.isC||selected===i){
+        const pr=r+6+3*Math.sin(t*2+n.phase);
+        ctx.strokeStyle=nodeColor(n);ctx.globalAlpha=n.alpha*0.5;
+        ctx.lineWidth=1.4;ctx.beginPath();ctx.arc(n.x,n.y,pr,0,7);ctx.stroke();
+        ctx.globalAlpha=n.alpha*n.intro;
+      }
+      /* body */
+      const bg=ctx.createRadialGradient(n.x-r*0.3,n.y-r*0.35,r*0.1,n.x,n.y,r);
+      bg.addColorStop(0,n.b.c[1]);bg.addColorStop(1,n.b.c[0]);
+      ctx.fillStyle=bg;ctx.beginPath();ctx.arc(n.x,n.y,r,0,7);ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.35)';ctx.lineWidth=1;ctx.stroke();
+      /* label */
+      if(n.alpha>0.5){
+        ctx.fillStyle='rgba(235,233,245,.85)';
+        ctx.font=(n.isC?'600 12.5px':'500 10.5px')+" Outfit,sans-serif";
+        ctx.textAlign='center';
+        ctx.fillText(truncate(n.b.t,n.isC?22:16),n.x,n.y+r+15);
+      }
+    });
+    ctx.restore();
+    mapAnim=requestAnimationFrame(draw);
+  }
+  function easeOut(x){return 1-Math.pow(1-x,3)}
+  function truncate(s,n){return s.length>n?s.slice(0,n-1)+'…':s}
+
+  /* interactions */
+  function toWorld(px,py){
+    const rect=cv.getBoundingClientRect();
+    let x=px-rect.left,y=py-rect.top;
+    x=(x-W/2-cam.x)/cam.z+W/2; y=(y-H/2-cam.y)/cam.z+H/2;
+    return [x,y];
+  }
+  cv.onpointerdown=e=>{cv.setPointerCapture(e.pointerId);
+    if(pinch===null&&drag===null)drag={x:e.clientX,y:e.clientY,moved:false,id:e.pointerId};
+    else if(drag&&pinch===null)pinch={id2:e.pointerId,d0:0};
+  };
+  cv.onpointermove=e=>{
+    if(drag&&e.pointerId===drag.id&&!pinch){
+      const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+      if(Math.abs(dx)+Math.abs(dy)>4)drag.moved=true;
+      cam.x+=dx;cam.y+=dy;drag.x=e.clientX;drag.y=e.clientY;
+    }
+  };
+  cv.onpointerup=e=>{
+    if(drag&&e.pointerId===drag.id){
+      if(!drag.moved){
+        const[wx,wy]=toWorld(e.clientX,e.clientY);
+        let hit=-1;
+        nodes.forEach((n,i)=>{ if(Math.hypot(wx-n.x,wy-n.y)<n.r+10) hit=i; });
+        if(hit>0){selected=hit;showNodeCard(nodes[hit]);}
+        else {selected=-1;hideNodeCard();}
+      }
+      drag=null;
+    }
+    pinch=null;
+  };
+  cv.onwheel=e=>{e.preventDefault();
+    cam.z=Math.min(2.4,Math.max(0.5,cam.z*(e.deltaY<0?1.08:0.93)));};
+  let lastDist=0;
+  cv.ontouchmove=e=>{
+    if(e.touches.length===2){e.preventDefault();
+      const d=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
+                         e.touches[0].clientY-e.touches[1].clientY);
+      if(lastDist)cam.z=Math.min(2.4,Math.max(0.5,cam.z*d/lastDist));
+      lastDist=d;}
+  };
+  cv.ontouchend=()=>{lastDist=0};
+
+  window.mapFilter=(chip,f)=>{
+    filter=f; selected=-1; hideNodeCard();
+    document.querySelectorAll('#mapchips .chip').forEach(c=>c.classList.toggle('on',c===chip));
+  };
+  function showNodeCard(n){
+    const c=n.conn,ct=CTYPES[c.type];
+    document.getElementById('nc-title').textContent=n.b.t;
+    document.getElementById('nc-auth').textContent=n.b.a+" · "+n.b.y;
+    document.getElementById('nc-tags').innerHTML=
+      `<span class="ntag" style="background:${ct.col}22;color:${ct.col};border:1px solid ${ct.col}55">${ct.label}</span>
+       <span class="ntag" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)">${Math.round(c.s*100)}% LINKED</span>`;
+    document.getElementById('nc-reason').textContent=c.reason;
+    document.getElementById('nc-view').onclick=()=>{hideNodeCard();showBook(n.b.id)};
+    document.getElementById('nodecard').classList.add('show');
+  }
+  window.hideNodeCard=()=>{
+    const el=document.getElementById('nodecard'); if(el)el.classList.remove('show');
+    selected=-1;
+  };
+  for(let i=0;i<5;i++)spawnParticle();
+  mapAnim=requestAnimationFrame(draw);
+}
+
+/* ============================================================ VOICE RECORDING */
+let recTimer=null,recSecs=0;
+function openRecord(){
+  document.getElementById('recbook').textContent=BOOKS[currentBook].t+" · "+BOOKS[currentBook].a;
+  const w=document.getElementById('recwave');
+  w.innerHTML=Array.from({length:26},(_,i)=>
+    `<i style="height:${(12+Math.abs(Math.sin(i*1.3))*70).toFixed(0)}px;animation-delay:${(i*0.05).toFixed(2)}s"></i>`).join('');
+  recSecs=0; updateRecTime();
+  recTimer=setInterval(()=>{recSecs++;updateRecTime()},1000);
+  go('scr-record');
+}
+function updateRecTime(){
+  document.getElementById('rectime').textContent=
+    Math.floor(recSecs/60)+":"+String(recSecs%60).padStart(2,'0');
+}
+function setVis(btn,v){
+  document.querySelectorAll('.visrow .visbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+}
+function stopRecord(){
+  clearInterval(recTimer);
+  toast('Voice note saved 🎙');
+  showBook(currentBook);
+}
+function cancelRecord(){ clearInterval(recTimer); showBook(currentBook); }
+
+/* ============================================================ PROFILE */
+function renderProfile(){
+  const read=SHELVES.read.length, cur=SHELVES.current, want=SHELVES.want;
+  document.getElementById('profilebody').innerHTML=`
+    <div class="banner" id="banner" style="background:${bannerStyle}">
+      <button class="iconbtn backbtn" style="position:absolute;top:54px;left:14px;background:rgba(20,18,15,.35);color:#fff" onclick="go('scr-feed')">←</button>
+      <span class="avatar av-lg" style="background:#7E9276;position:absolute;left:20px;bottom:-30px;border:4px solid var(--bg)" onclick="toast('Camera / photo picker opens here 📷')">JO</span>
+      <button class="editbtn" onclick="openBannerSheet()">✎ Edit profile</button>
+    </div>
+    <div class="pname serif">Joana</div>
+    <p class="pbio">Reading slowly on purpose. Voice-noting every book that makes me put the kettle on. 🌿</p>
+    <div class="followline"><b>128</b> followers &nbsp;·&nbsp; <b>97</b> following</div>
+    <div class="statrow">
+      <div class="stat"><b class="serif">14</b><span>This year</span></div>
+      <div class="stat"><b class="serif">${read+38}</b><span>All-time</span></div>
+      <div class="stat"><b class="serif">4.2</b><span>Avg rating</span></div>
+    </div>
+    <div class="sect">Favourite genres</div>
+    <div class="genrerow">${["Literary","Nature","Quiet sci-fi","Cozy mystery"].map(g=>`<span class="tag">${g}</span>`).join('')}</div>
+    <div class="sect">Currently reading</div>
+    <div class="shelfrow">${cur.map(i=>coverEl(BOOKS[i],'cv-shelf')).join('')}</div>
+    <div class="sect">Read</div>
+    <div class="shelfrow">${SHELVES.read.map(i=>coverEl(BOOKS[i],'cv-shelf')).join('')}</div>
+    <div class="sect">Want to read</div>
+    <div class="shelfrow">${want.map(i=>coverEl(BOOKS[i],'cv-shelf')).join('')}</div>`;
+}
+function openBannerSheet(){
+  const s=document.getElementById('swatches');
+  s.innerHTML=SWATCHCOLORS.map(c=>
+    `<button class="swatch" style="background:linear-gradient(135deg,${c},${c}cc)" onclick="pickBanner('${c}',this)"></button>`).join('')+
+    `<button class="swatch photo" onclick="document.getElementById('bannerfile').click()">📷</button>`;
+  document.getElementById('bannersheet').classList.add('show');
+  document.getElementById('scrim').classList.add('show');
+}
+function pickBanner(c,el){
+  document.querySelectorAll('.swatch').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel');
+  bannerStyle=`linear-gradient(120deg,${c},${shade(c,28)})`;
+  document.getElementById('banner').style.background=bannerStyle;
+  document.getElementById('banner').style.backgroundSize='cover';
+}
+function bannerPhoto(input){
+  const f=input.files[0]; if(!f)return;
+  const url=URL.createObjectURL(f);
+  bannerStyle=`url(${url}) center/cover`;
+  const b=document.getElementById('banner');
+  b.style.background=bannerStyle;
+  closeSheets(); toast('Banner photo set 🖼');
+}
+function resetBanner(){
+  bannerStyle="linear-gradient(120deg,#4E4668,#7E9276)";
+  document.getElementById('banner').style.background=bannerStyle;
+  closeSheets(); toast('Back to default 🌿');
+}
+function shade(hex,amt){
+  const n=parseInt(hex.slice(1),16);
+  const r=Math.min(255,(n>>16)+amt),g=Math.min(255,((n>>8)&255)+amt),b=Math.min(255,(n&255)+amt);
+  return `rgb(${r},${g},${b})`;
+}
+function closeSheets(){
+  document.querySelectorAll('.sheet').forEach(s=>s.classList.remove('show'));
+  document.getElementById('scrim').classList.remove('show');
+}
+
+/* ============================================================ LIBRARY */
+function renderLibrary(){
+  const el=document.getElementById('librarybody');
+  el.innerHTML=`
+    <div class="sect">Shelves</div>
+    <div class="shelfrow">${SHELVES.current.map(i=>coverEl(BOOKS[i],'cv-shelf')).join('')}</div>
+    <div class="sect">Folders</div>
+    ${FOLDERS.map((f,i)=>{
+      const covers=f.books.slice(0,3).map(bi=>{
+        const b=BOOKS[bi];
+        return `<div class="cover cv-tiny" style="background:linear-gradient(155deg,${b.c[0]},${b.c[1]})" onclick="event.stopPropagation();showBook(${b.id})"><span class="ct">${b.t}</span></div>`;
+      }).join('');
+      const extra=f.books.length>3?`+${f.books.length-3}`:'';
+      return `<div class="folder" onclick="openFolder(${i})">
+        <div class="fmosaic">${covers}</div>
+        <div class="fmeta"><b>${f.n}</b><span>${f.vis}</span></div>
+        ${extra?`<span class="fcount">${extra}</span>`:''}
+        <span style="color:var(--ink-faint)">›</span></div>`;
+    }).join('')}
+    <button class="newfolder" onclick="newFolder()">＋ &nbsp;New folder</button>`;
+}
+function newFolder(){
+  const name=prompt("Name your folder","Beach reads");
+  if(!name)return;
+  FOLDERS.push({n:name,books:[],vis:"Private"});
+  renderLibrary(); toast(`“${name}” created 📁`);
+}
+function openFolder(i){
+  currentFolder=i; folderEditMode=false;
+  renderFolder(); go('scr-folder');
+}
+function renderFolder(){
+  const f=FOLDERS[currentFolder];
+  document.getElementById('foldertitle').textContent=f.n;
+  const g=document.getElementById('foldergrid');
+  g.classList.toggle('editmode',folderEditMode);
+  g.innerHTML=f.books.map((bi,idx)=>{
+    const b=BOOKS[bi];
+    return `<div class="gridwrap">
+      <button class="rm" onclick="removeFromFolder(${idx})">✕</button>
+      ${coverEl(b,'cv-grid')}<div class="gtitle">${b.t}</div></div>`;
+  }).join('')+
+  `<button class="addtile" onclick="addToFolder()"><span class="plus">＋</span>Add book</button>`;
+  if(!f.books.length){
+    g.insertAdjacentHTML('afterbegin',
+      `<div class="empty" style="grid-column:1/-1;padding:30px"><span class="eart">🕯</span><h3>This folder is waiting.</h3><p>Add a few books to give it a soul.</p></div>`);
+  }
+}
+function toggleFolderEdit(){
+  folderEditMode=!folderEditMode;
+  document.getElementById('foldergrid').classList.toggle('editmode',folderEditMode);
+  toast(folderEditMode?'Edit mode — tap ✕ to remove':'Done editing');
+}
+function removeFromFolder(idx){
+  FOLDERS[currentFolder].books.splice(idx,1);
+  renderFolder(); renderLibrary();
+  toast('Removed from folder (book kept in your library)');
+}
+function addToFolder(){
+  const f=FOLDERS[currentFolder];
+  const candidates=BOOKS.filter(b=>!f.books.includes(b.id));
+  if(!candidates.length){toast('Everything is already in here 🎉');return}
+  f.books.push(candidates[Math.floor(Math.random()*candidates.length)].id);
+  renderFolder(); renderLibrary(); toast('Added 📚');
+}
+function folderMenu(){
+  const f=FOLDERS[currentFolder];
+  const next={"Public":"Friends only","Friends only":"Private","Private":"Public"}[f.vis];
+  f.vis=next; renderLibrary();
+  toast(`Folder is now ${next.toLowerCase()}`);
+}
+
+/* ============================================================ COMMUNITIES */
+function renderComms(){
+  document.getElementById('commlist').innerHTML=COMMS.map((c,i)=>`
+    <div class="commcard" onclick="openComm(${i})">
+      <div class="commbanner" style="background:linear-gradient(135deg,${c.col[0]},${c.col[1]})">${c.n}</div>
+      <div class="commbody"><p>${c.d}</p>
+        <div class="commline"><span class="privacy">${c.priv}</span><span>${c.members} members</span>
+        <span style="margin-left:auto">${c.shelf.length} on shared shelf</span></div></div>
+    </div>`).join('');
+}
+function openComm(i){
+  currentComm=i;
+  document.getElementById('commtitle').textContent=COMMS[i].n;
+  document.querySelectorAll('#scr-comm .tabbtn').forEach((b,bi)=>b.classList.toggle('on',bi===0));
+  renderCommBody('feed'); go('scr-comm');
+}
+function commTab(btn,tab){
+  document.querySelectorAll('#scr-comm .tabbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); renderCommBody(tab);
+}
+function renderCommBody(tab){
+  const c=COMMS[currentComm], el=document.getElementById('commbody');
+  if(tab==='feed'){
+    el.innerHTML=`
+      <div class="card"><div class="card-head">${avEl('noor')}
+        <div class="who"><b>Noor Haddad</b><span>pinned by moderators · 3h ago</span></div></div>
+        <p class="review open" style="-webkit-line-clamp:unset">📌 This month's read is <b>${BOOKS[c.shelf[0]].t}</b>. We discuss the first half on Sunday — voice notes welcome, spoilers gently fenced.</p>
+      </div>
+      <div class="card"><div class="card-head">${avEl('sam')}
+        <div class="who"><b>Sam Whitfield</b><span>shared a voice note · 6h ago</span></div></div>
+        ${vpillEl({dur:"0:58"})}
+        <div class="reactrow"><button class="react" onclick="hitReact(this)">🤍 <b>7</b></button>
+        <button class="react">💬 2</button></div>
+      </div>`;
+  } else if(tab==='shelf'){
+    el.innerHTML=`<div class="sect" style="margin-top:8px">Shared shelf — anyone can add</div>
+      <div class="grid3">${c.shelf.map(bi=>`<div>${coverEl(BOOKS[bi],'cv-grid')}<div class="gtitle">${BOOKS[bi].t}</div></div>`).join('')}
+      <button class="addtile" onclick="toast('Added to the shared shelf 📚')"><span class="plus">＋</span>Add book</button></div>`;
+  } else {
+    el.innerHTML=`<div class="thread" style="padding-bottom:20px">
+      <div class="msg them">anyone else reading by lamp light right now or is that just me<span class="mt">9:41 pm</span></div>
+      <div class="msg them">chapter 6 is so good I had to put the book DOWN<span class="mt">9:44 pm</span></div>
+      <div class="msg me">putting the kettle on and catching up tonight 🍵<span class="mt">9:52 pm</span></div>
+    </div>
+    <div style="padding:0 16px"><div class="searchbox"><input placeholder="Message the club…" onkeydown="if(event.key==='Enter'){toast('Sent to the club 💬');this.value=''}"></div></div>`;
+  }
+}
+function openModal(id){
+  if(id==='newcomm'){
+    document.getElementById('nc-seed').innerHTML=
+      BOOKS.slice(0,6).map(b=>coverEl(b,'cv-tiny',`this.classList.toggle('sel');event.stopPropagation()`)).join('');
+  }
+  document.getElementById(id).classList.add('show');
+}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function segSel(btn){
+  btn.parentElement.querySelectorAll('.seg').forEach(s=>s.classList.remove('on'));
+  btn.classList.add('on');
+}
+function createCommunity(){
+  const n=document.getElementById('nc-name').value||"Untitled circle";
+  const d=document.getElementById('nc-desc').value||"A brand new corner for readers.";
+  COMMS.unshift({n,d,col:["#7E9276","#A4B494"],members:1,priv:"OPEN",shelf:[0,7]});
+  closeModal('newcomm'); renderComms(); toast(`“${n}” is live 🌱`);
+}
+
+/* ============================================================ MESSAGES */
+function renderInbox(){
+  document.getElementById('inbox').innerHTML=CHATS.map((c,i)=>{
+    const u=USERS[c.u], last=c.msgs[c.msgs.length-1];
+    const preview=last.type==='book'?`📕 ${BOOKS[last.b].t}`:last.type==='voice'?`🎙 Voice note · ${last.dur}`:last.t;
+    return `<div class="convrow" onclick="openChat(${i})">${avEl(c.u)}
+      <div class="cv-body"><b>${u.n}</b><p>${preview}</p></div>
+      <span class="when">${c.when}</span>${c.unread?'<span class="unread"></span>':''}</div>`;
+  }).join('');
+}
+function openChat(i){
+  currentChat=i; CHATS[i].unread=false;
+  const c=CHATS[i],u=USERS[c.u];
+  document.getElementById('chatname').textContent=u.n;
+  document.getElementById('chatavatar').innerHTML=avEl(c.u,'av-sm');
+  renderThread(); renderInbox(); go('scr-chat');
+}
+function renderThread(){
+  const c=CHATS[currentChat];
+  const el=document.getElementById('thread');
+  el.innerHTML=c.msgs.map(m=>{
+    if(m.type==='book'){const b=BOOKS[m.b];
+      return `<div class="bookmsg ${m.who}" onclick="showBook(${b.id})">
+        <div class="cover cv-tiny" style="background:linear-gradient(155deg,${b.c[0]},${b.c[1]})"><span class="ct">${b.t}</span></div>
+        <div class="bm"><b class="serif">${b.t}</b><span>${b.a} · ★★★★★</span></div></div>`;}
+    if(m.type==='voice')
+      return `<div style="align-self:${m.who==='me'?'flex-end':'flex-start'}">${vpillEl({dur:m.dur},true)}</div>`;
+    return `<div class="msg ${m.who}">${m.t}<span class="mt">${m.at} ${m.who==='me'?'· read':''}</span></div>`;
+  }).join('');
+  el.scrollTop=el.scrollHeight;
+}
+function sendMsg(){
+  const inp=document.getElementById('chatinput');
+  const v=inp.value.trim(); if(!v)return;
+  CHATS[currentChat].msgs.push({who:'me',t:v,at:'now'});
+  inp.value=''; renderThread();
+}
+
+/* ============================================================ ONBOARDING */
+function obNext(step){
+  document.querySelectorAll('.ob-step').forEach(s=>s.classList.toggle('on',+s.dataset.step===step));
+}
+function finishOnboarding(){
+  localStorage.setItem('folio-onboarded','1');
+  go('scr-feed');
+}
+(function buildOnboarding(){
+  document.getElementById('genrechips').innerHTML=GENRES.map(g=>
+    `<button class="gchip" onclick="this.classList.toggle('on')">${g}</button>`).join('');
+  document.getElementById('seedgrid').innerHTML=BOOKS.slice(0,9).map(b=>
+    `<div class="seedbook" onclick="this.classList.toggle('sel')"><span class="tick">✓</span>
+     ${coverEl(b,'cv-grid','')}</div>`).join('');
+  document.getElementById('friendlist').innerHTML=
+    ['maya','theo','priya','sam'].map(u=>`<div class="friendrow">${avEl(u)}
+      <b>${USERS[u].n}</b><button class="fbtn" onclick="this.classList.toggle('added');this.textContent=this.classList.contains('added')?'Following ✓':'Follow'">Follow</button></div>`).join('');
+})();
+
+/* ============================================================ BOOT */
+renderFeed(); renderSearch(''); renderProfile(); renderLibrary(); renderComms(); renderInbox();
+if(localStorage.getItem('folio-onboarded')) go('scr-feed'); else go('scr-onboard');
+/* re-render profile when entering (banner state) */
+const _go=go;
+go=function(id){ if(id==='scr-profile')renderProfile(); _go(id); };
+</script>
+</body>
+</html>
